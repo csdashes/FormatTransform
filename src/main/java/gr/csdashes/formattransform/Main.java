@@ -1,4 +1,4 @@
-package gr.csdashes.formattransport;
+package gr.csdashes.formattransform;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import org.apache.commons.cli.CommandLine;
@@ -48,7 +47,7 @@ public class Main {
         Options options = new Options();
 
         // TODO: Group input and output sections and make them mandatory
-        // TODO: Add <format-transport [INPUT] [OUTPUT]> -like menu
+        // TODO: Add <format-transform [INPUT] [OUTPUT]> -like menu
         options.addOption(OptionBuilder.withLongOpt("input-gml")
                 .withDescription("Set a GML file as an input source")
                 .hasArg()
@@ -82,11 +81,10 @@ public class Main {
             // parse the command line arguments
             CommandLine cliArgs = parser.parse(GetMenuOptions(), args);
 
-                System.out.println(Arrays.asList(args));
             // Print help and exit
             if (args.length == 0 || cliArgs.hasOption("h")) {
                 HelpFormatter formatter = new HelpFormatter();
-                formatter.printHelp("format-transport", GetMenuOptions());
+                formatter.printHelp("format-transform", GetMenuOptions());
                 System.exit(0);
             }
 
