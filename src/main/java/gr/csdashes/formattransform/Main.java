@@ -58,6 +58,16 @@ public class Main {
                 .hasArg()
                 .withArgName("file")
                 .create("ih"));
+        options.addOption(OptionBuilder.withLongOpt("input-synthetic-graph")
+                .withDescription("Set a synthetic graph file as an input source")
+                .hasArg()
+                .withArgName("file")
+                .create("isg"));
+        options.addOption(OptionBuilder.withLongOpt("input-synthetic-communities")
+                .withDescription("Set a synthetic communities file as an input source")
+                .hasArg()
+                .withArgName("file")
+                .create("isc"));
 
         options.addOption(OptionBuilder.withLongOpt("output-gml")
                 .withDescription("Set a GML file as an output target")
@@ -133,6 +143,28 @@ public class Main {
                         graph.addEdge(source + " " + dest, source, dest);
                     }
                 });
+
+                // Write output
+                FileSink fs = new FileSinkGML();
+                fs.writeAll(graph, cliArgs.getOptionValue("og"));
+            }
+
+            if (cliArgs.hasOption("isg") && cliArgs.hasOption("og")) {
+                Graph graph = new DefaultGraph("tmp graph", false, true);
+
+                Path filePath = Paths.get(cliArgs.getOptionValue("isg"));
+                Files.lines(filePath).forEach((line) -> {
+                    String[] s_d = line.split("\t", 2);
+                    graph.addEdge(s_d[0] + " " + s_d[1], s_d[0], s_d[1]);
+                });
+
+                if (cliArgs.hasOption("isc")) {
+                    filePath = Paths.get(cliArgs.getOptionValue("isc"));
+                    Files.lines(filePath).forEach((line) -> {
+                        String[] s_d = line.split("\t", 2);
+                        graph.getNode(s_d[0]).addAttribute("groundTruth", s_d[1]);
+                    });
+                }
 
                 // Write output
                 FileSink fs = new FileSinkGML();
