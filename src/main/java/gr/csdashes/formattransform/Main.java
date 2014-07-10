@@ -25,7 +25,7 @@ import org.graphstream.stream.file.FileSinkGML;
 
 /**
  *
- * @author tasos
+ * @author Anastasis Andronidis <anastasis90@yahoo.gr>
  */
 public class Main {
 
@@ -53,7 +53,7 @@ public class Main {
                 .hasArg()
                 .withArgName("file")
                 .create("ig"));
-        options.addOption(OptionBuilder.withLongOpt("input-hama-txt")
+        options.addOption(OptionBuilder.withLongOpt("input-hama")
                 .withDescription("Set a Hama text file as an input source")
                 .hasArg()
                 .withArgName("file")
@@ -64,7 +64,7 @@ public class Main {
                 .hasArg()
                 .withArgName("file")
                 .create("og"));
-        options.addOption(OptionBuilder.withLongOpt("output-hama-txt")
+        options.addOption(OptionBuilder.withLongOpt("output-hama")
                 .withDescription("Set a Hama text file as an output target")
                 .hasArg()
                 .withArgName("file")
@@ -102,7 +102,7 @@ public class Main {
                 try (BufferedWriter writer = Files.newBufferedWriter(filePath, charset)) {
                     // Start exchange
                     for (Node n : graph) {
-                        String line = n.getId() + " " + join(n.getEdgeSet(), " ", n);
+                        String line = n.getId() + "\t" + join(n.getEdgeSet(), " ", n);
                         writer.write(line, 0, line.length());
                         writer.newLine();
                     }
@@ -121,9 +121,10 @@ public class Main {
                 // tokenized on the fly, and not lines and then split
                 Files.lines(filePath).forEach((line) -> {
                     // Start exchange
-                    String[] tokens = line.split(" ");
-                    for (int i = 1; i < tokens.length; i++) {
-                        graph.addEdge(tokens[0] + " " + tokens[i], tokens[0], tokens[i]);
+                    String[] s_d = line.split("\t", 2);
+                    String source = s_d[0];
+                    for (String dest : s_d[1].split(" ")) {
+                        graph.addEdge(source + " " + dest, source, dest);
                     }
                 });
 
