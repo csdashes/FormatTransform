@@ -70,6 +70,12 @@ public class Main {
                 .withArgName("file")
                 .create("oh"));
 
+        options.addOption(OptionBuilder.withLongOpt("display-gml")
+                .withDescription("Display a graph from a GML")
+                .hasArg()
+                .withArgName("file")
+                .create("dg"));
+
         options.addOption("h", "help", false, "Print this message");
 
         return options;
@@ -131,6 +137,13 @@ public class Main {
                 // Write output
                 FileSink fs = new FileSinkGML();
                 fs.writeAll(graph, cliArgs.getOptionValue("og"));
+            }
+
+            if (cliArgs.hasOption("dg")) {
+                Graph graph = new DefaultGraph("tmp graph");
+                graph.read(cliArgs.getOptionValue("dg"));
+
+                graph.display();
             }
         } catch (ParseException exp) {
             // oops, something went wrong
