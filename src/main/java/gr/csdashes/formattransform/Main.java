@@ -139,8 +139,11 @@ public class Main {
                     // Start exchange
                     String[] s_d = line.split("\t", 2);
                     String source = s_d[0];
-                    for (String dest : s_d[1].split(" ")) {
+                    for (String dests : s_d[1].split(" ")) {
+                        String[] dest_weight = dests.split(",", 2);
+                        String dest = dest_weight[0], weight = dest_weight[1];
                         graph.addEdge(source + " " + dest, source, dest);
+                        graph.getEdge(source + " " + dest).addAttribute("weight", weight);
                     }
                 });
 
